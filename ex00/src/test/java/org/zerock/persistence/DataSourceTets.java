@@ -6,6 +6,8 @@ import java.sql.Connection;
 
 import javax.sql.DataSource;
 
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +21,32 @@ import lombok.extern.log4j.Log4j;
 @ContextConfiguration("file:src/main/webapp/WEB-INF/spring/root-context.xml")
 @Log4j
 public class DataSourceTets {
-	
+
 	@Setter(onMethod_ = @Autowired)
 	private DataSource dataSource;
-	
+
+	@Setter(onMethod_ = @Autowired)
+	private SqlSessionFactory sqlSessionFactory;
+
+	@Test
+	public void testMyBatis() {
+		try (SqlSession session = sqlSessionFactory.openSession(); Connection conn = session.getConnection();) {
+
+			System.out.println("=========testMyBatis==========");
+			log.info(session);
+			log.info(conn);
+			System.out.println("===============================");
+		} catch (Exception e) {
+			fail(e.getMessage());
+		}
+	}
+
 	@Test
 	public void testConnection() {
-		try (Connection conn = dataSource.getConnection()) { 
+		try (Connection conn = dataSource.getConnection()) {
+			System.out.println("=========testConnection==========");
 			log.info(conn);
+			System.out.println("===============================");
 		} catch (Exception e) {
 			fail(e.getMessage());
 		}
