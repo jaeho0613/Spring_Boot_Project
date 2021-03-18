@@ -24,4 +24,4 @@ insert into tbl_board (bno, title, content, writer) values(seq_board.nextval, 'Å
 
 COMMIT;
 
-select * from tbl_board;
+select * from tbl_board where bno > 0;
