@@ -14,10 +14,12 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.zerock.domain.SampleDTO;
 import org.zerock.domain.SampleDTOList;
@@ -150,8 +152,7 @@ public class SampleController {
 		return "/sample/ex04";
 	}
 
-	// ====================================Return
-	// 타입================================================//
+	// ====================================Return타입================================================//
 
 	// Return Void
 	// - 해당 URL의 경로를 그대로 jsp 파일의 이름으로 사용할 때 사용
@@ -206,5 +207,21 @@ public class SampleController {
 		header.add("Content-Type", "application/json;charset=UTF-8");
 
 		return new ResponseEntity<String>(msg, header, HttpStatus.OK);
+	}
+
+	// ====================================파일업로드================================================//
+
+	@GetMapping("/exUpload")
+	public void exUpload() {
+		log.info("/exUpload................");
+	}
+
+	@PostMapping("/exUploadPost")
+	public void exUploadPost(ArrayList<MultipartFile> files) {
+		files.forEach(file -> {
+			log.info("---------------------------");
+			log.info("name: " + file.getOriginalFilename());
+			log.info("size: " + file.getSize());
+		});
 	}
 }
