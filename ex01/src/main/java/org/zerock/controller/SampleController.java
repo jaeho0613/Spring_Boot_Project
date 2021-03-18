@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -109,10 +110,36 @@ public class SampleController {
 	}
 
 	// Paramter의 날짜 정보를 저장함
-	// http://localhost:8080/sample/ex03?title=test?&dueDate=2021-03-12
+	// http://localhost:8080/sample/ex03?title=test?&dueDate=2021-03-12 -> DateTimeFormat이 없는 경우
+	// http://localhost:8080/sample/ex03?title=test?&dueDate=2021/03/12 -> DateTimeFormat이 있는 경우
 	@GetMapping("/ex03")
 	public String ex03(TodoDTO todo) {
 		log.info("todo: " + todo);
 		return "ex03";
+	}
+
+	// ====================================Model================================================//
+
+	// page는 Bean에 저장 되지 않는다.
+	// http://localhost:8080/sample/ex04?name=aaa&age=10&page=9
+	//	@GetMapping("/ex04")
+	//	public String ex04(SampleDTO dto, int page) {
+	//
+	//		log.info("dto: " + dto);
+	//		log.info("page: " + page);
+	//
+	//		return "/sample/ex04";
+	//	}
+	
+	// 위와 다르게 @ModelAttribute 사용하여 전달 받은 parameter를 다시 넘겨줌.
+	// - get set이 없는 parameter를 사용할 때 용이함. 
+	// http://localhost:8080/sample/ex04?name=aaa&age=10&page=9
+	@GetMapping("/ex04")
+	public String ex04(SampleDTO dto, @ModelAttribute("page") int page) {
+		
+		log.info("dto: " + dto);
+		log.info("page: " + page);
+
+		return "/sample/ex04";
 	}
 }
