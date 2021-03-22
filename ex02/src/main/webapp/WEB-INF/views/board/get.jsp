@@ -190,7 +190,7 @@
 
     <!-- Input From -->
     <div class="card-body mr-5 ml-5">
-      <h5 class="card-title text-center">Board Register</h5>
+      <h5 class="card-title text-center">Board Read Page</h5>
 
       <!-- Bno input -->
       <div class="form-group">
@@ -216,11 +216,12 @@
         <input type="text" class="form-control" id="Writer" name="writer" value="${board.writer}" readonly>
       </div>
 
-      <button data-oper='modify' class="btn btn-primary"
-        onclick="location.href='/board/modify?bno=${board.bno}'">Modify</button>
+      <button data-oper='modify' class="btn btn-primary">Modify</button>
+      <button data-oper='list' class="btn btn-primary">List</button>
 
-      <button data-oper='list' class="btn btn-primary"
-        onclick="location.href='/board/list'">List</button>
+      <form id="operForm" action="/board/modify" method="get">
+        <input type="hidden" name="bno" id="bno" value="${board.bno}">
+      </form>
     </div>
   </div>
 
@@ -230,5 +231,26 @@
   <jsp:include page="../includes/footer.jsp"></jsp:include>
 
   </body>
+
+  <script>
+    $(document).ready(function () {
+
+      var operForm = $("#operForm");
+
+      $("button[data-oper='modify']").on("click", function (e) {
+
+        operForm.attr("action", "/board/modify").submit();
+
+      });
+
+      $("button[data-oper='list']").on("click", function (e) {
+
+        operForm.find('#bno').remove();
+        operForm.attr('action', "/board/list");
+        operForm.submit();
+
+      });
+    });
+  </script>
 
   </html>
