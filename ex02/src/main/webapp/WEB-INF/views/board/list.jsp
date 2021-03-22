@@ -193,15 +193,15 @@
 
 			<!-- Page Heading -->
 			<h1 class="h3 mb-2 text-gray-800">코드로 배우는 스프링</h1>
-			<p class="mb-4">
-				- Data Table을 제거한 상태입니다.
-			</p>
+			<p class="mb-4">- Data Table을 제거한 상태입니다.</p>
 
 			<!-- DataTales Example -->
 			<div class="card shadow mb-4">
 				<div class="card-header py-3 d-flex justify-content-between">
-					<h6 class="m-0 font-weight-bold text-primary d-flex align-items-center">Database List</h6>
-					<button id="regBtn" type="button" class="btn btn-secondary">Register New Board</button>
+					<h6 class="m-0 font-weight-bold text-primary d-flex align-items-center">Database
+						List</h6>
+					<button id="regBtn" type="button" class="btn btn-secondary">Register
+						New Board</button>
 				</div>
 				<div class="card-body">
 
@@ -239,9 +239,42 @@
 										</td>
 									</tr>
 								</c:forEach>
-
 							</tbody>
 						</table>
+
+						<!-- 페이징 UI -->
+						<nav aria-label="Page navigation example">
+							<ul class="pagination justify-content-center">
+
+								<!-- 이전 페이지가 있는가? -->
+								<c:if test="${ pageMaker.prev }">
+									<li class="page-item previous">
+										<a class="page-link" href="${ pageMaker.startPage - 1 }" tabindex="-1">Previous</a>
+									</li>
+								</c:if>
+
+								<!-- 총 페이지 갯수는 몇개인가? -->
+								<c:forEach var="num" begin="${ pageMaker.startPage }" end="${ pageMaker.endPage }">
+									<li class="page-item ${ pageMaker.cri.pageNum == num ? " activity": "" }">
+										<a class="page-link" href="${ num }">${ num }</a>
+									</li>
+								</c:forEach>
+
+								<!-- 다음 페이지가 있는가? -->
+								<c:if test="${ pageMaker.next }">
+									<li class="page-item">
+										<a class="page-link" href="${ pageMaker.endPage + 1}">Next</a>
+									</li>
+								</c:if>
+
+							</ul>
+						</nav>
+
+						<!-- 페이징 데이터 액션 폼 (hidden) -->
+						<form action="/board/list" id="actionForm" method="get">
+							<input type="hidden" name="pageNum" value="${ pageMaker.cri.pageNum }">
+							<input type="hidden" name="amount" value="${ pageMaker.cri.amount }">
+						</form>
 
 						<!-- Modal -->
 						<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
@@ -249,17 +282,17 @@
 							<div class="modal-dialog modal-dialog-centered" role="document">
 								<div class="modal-content">
 									<div class="modal-header">
-										<h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+										<h5 class="modal-title" id="exampleModalLongTitle">Modal
+											title</h5>
 										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 											<span aria-hidden="true">&times;</span>
 										</button>
 									</div>
-									<div class="modal-body">
-										처리가 완료되었습니다.
-									</div>
+									<div class="modal-body">처리가 완료되었습니다.</div>
 									<div class="modal-footer">
 										<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-										<button type="button" class="btn btn-primary">Save changes</button>
+										<button type="button" class="btn btn-primary">Save
+											changes</button>
 									</div>
 								</div>
 							</div>
@@ -281,33 +314,52 @@
 	</body>
 
 	<script type="text/javascript">
-		$(document).ready(function () {
+		$(document)
+			.ready(
+				function () {
 
-			var result = '<c:out value="${result}"/>';
+					// var result = '<c:out value="${result}"/>';
+					var result = '${result}';
 
-			checkModal(result);
+					console.log("result: " + result);
 
-			history.replaceState({}, null, null);
+					checkModal(result);
 
-			function checkModal(result) {
+					history.replaceState({}, null, null);
 
-				if (result === '' || history.state) {
-					return;
-				}
+					function checkModal(result) {
 
-				if (parseInt(result) > 0) {
-					$(".modal-body").html("게시글 " + parseInt(result) + " 번이 등록되었습니다.");
-				}
+						if (result === '' || history.state) {
+							return;
+						}
 
-				$("#myModal").modal("show");
+						if (parseInt(result) > 0) {
+							$(".modal-body").html(
+								"게시글 " + parseInt(result) +
+								" 번이 등록되었습니다.");
+						}
 
-			}
+						$("#myModal").modal("show");
 
-			$("#regBtn").on("click", function(){
-				self.location = "/board/register";
-			});
+					}
 
-		});
+					$("#regBtn").on("click", function () {
+						self.location = "/board/register";
+					});
+
+					var actionForm = $('#actionForm');
+
+					$(".page-item a").on("click", function(e){
+						
+						e.preventDefault();
+
+						console.log('click');
+
+						actionForm.find("input[name='pageNum']").val($(this).attr("href"));
+						actionForm.submit();
+					});
+					
+				});
 	</script>
 
 	</html>
