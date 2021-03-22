@@ -35,13 +35,13 @@ public class BoardControllerTests {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(ctx).build();
 	}
 
-	@Test
+	// @Test
 	public void testList() throws Exception {
 		log.info(
 				mockMvc.perform(MockMvcRequestBuilders.get("/board/list")).andReturn().getModelAndView().getModelMap());
 	}
 
-	@Test
+	// @Test
 	public void testRegister() throws Exception {
 
 		String resultPage = mockMvc
@@ -53,14 +53,14 @@ public class BoardControllerTests {
 
 	}
 
-	@Test
+	// @Test
 	public void testGet() throws Exception {
 
 		log.info(mockMvc.perform(MockMvcRequestBuilders.get("/board/get").param("bno", "2")).andReturn()
 				.getModelAndView().getModelMap());
 	}
 
-	@Test
+	// @Test
 	public void testModifty() throws Exception {
 
 		String result = mockMvc
@@ -71,12 +71,19 @@ public class BoardControllerTests {
 		log.info(result);
 	}
 
-	@Test
+	// @Test
 	public void testRemove() throws Exception {
 		// 삭제전 데이터베이스에 게시물 번호 확인할 것
 		String resultPage = mockMvc.perform(MockMvcRequestBuilders.post("/board/remove").param("bno", "1")).andReturn()
 				.getModelAndView().getViewName();
 
 		log.info(resultPage);
+	}
+
+	 @Test
+	public void testListPaging() throws Exception {
+
+		log.info(mockMvc.perform(MockMvcRequestBuilders.get("/board/list").param("pageNum", "2").param("amount", "50"))
+				.andReturn().getModelAndView().getModelMap());
 	}
 }
