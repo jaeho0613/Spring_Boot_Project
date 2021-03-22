@@ -18,5 +18,8 @@ public interface BoardService {
 	// public List<BoardVO> getList();
 	
 	public List<BoardVO> getList(Criteria cri);
+	
+	// 전체 페이지 갯수
+	public int getTotal(Criteria cri);
 
 }

@@ -1,27 +1,53 @@
 DROP SEQUENCE seq_board;
+
 DROP TABLE tbl_board;
+
 COMMIT;
 
 CREATE SEQUENCE seq_board;
 
 CREATE TABLE tbl_board (
-    bno number(10,0),
-    title varchar2(200) not null,
-    content varchar2(2000) not null,
-    writer varchar2(50) not null,
-    regdate date default sysdate,
-    updatedate date default sysdate
+    bno         NUMBER(10, 0),
+    title       VARCHAR2(200) NOT NULL,
+    content     VARCHAR2(2000) NOT NULL,
+    writer      VARCHAR2(50) NOT NULL,
+    regdate     DATE DEFAULT sysdate,
+    updatedate  DATE DEFAULT sysdate
 );
 
-alter table tbl_board add constraint pk_board primary key (bno);
+ALTER TABLE tbl_board ADD CONSTRAINT pk_board PRIMARY KEY ( bno );
+
+INSERT INTO tbl_board (
+    bno,
+    title,
+    content,
+    writer
+) VALUES (
+    seq_board.NEXTVAL,
+    '테스트 제목',
+    '테스트 내용',
+    'user00'
+);
 
 insert into tbl_board (bno, title, content, writer) values(seq_board.nextval, '테스트 제목', '테스트 내용', 'user00');
---insert into tbl_board (bno, title, content, writer) values(seq_board.nextval, '테스트 제목', '테스트 내용', 'user00');
---insert into tbl_board (bno, title, content, writer) values(seq_board.nextval, '테스트 제목', '테스트 내용', 'user00');
---insert into tbl_board (bno, title, content, writer) values(seq_board.nextval, '테스트 제목', '테스트 내용', 'user00');
---insert into tbl_board (bno, title, content, writer) values(seq_board.nextval, '테스트 제목', '테스트 내용', 'user00');
---insert into tbl_board (bno, title, content, writer) values(seq_board.nextval, '테스트 제목', '테스트 내용', 'user00');
+insert into tbl_board (bno, title, content, writer) values(seq_board.nextval, '테스트 제목', '테스트 내용', 'user00');
+insert into tbl_board (bno, title, content, writer) values(seq_board.nextval, '테스트 제목', '테스트 내용', 'user00');
+insert into tbl_board (bno, title, content, writer) values(seq_board.nextval, '테스트 제목', '테스트 내용', 'user00');
+insert into tbl_board (bno, title, content, writer) values(seq_board.nextval, '테스트 제목', '테스트 내용', 'user00');
 
-insert into tbl_board (bno, title, content, writer) (select seq_board.nextval, title, content, writer from tbl_board);
+INSERT INTO tbl_board (
+    bno,
+    title,
+    content,
+    writer
+)
+    ( SELECT
+        seq_board.NEXTVAL,
+        title,
+        content,
+        writer
+    FROM
+        tbl_board
+    );
 
 COMMIT;

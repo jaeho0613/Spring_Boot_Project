@@ -228,7 +228,9 @@
 							<tbody>
 								<c:forEach items="${ list }" var="board">
 									<tr>
-										<td><a href="/board/get?bno=${ board.bno }">${ board.bno }</a></td>
+										<td>
+											<a class="move" href="${ board.bno }">${ board.bno }</a>
+										</td>
 										<td>${ board.title }</td>
 										<td>${ board.writer }</td>
 										<td>
@@ -318,15 +320,14 @@
 			.ready(
 				function () {
 
-					// var result = '<c:out value="${result}"/>';
 					var result = '${result}';
-
-					console.log("result: " + result);
 
 					checkModal(result);
 
+					// 웹 히스토리 초기화
 					history.replaceState({}, null, null);
 
+					// 페이지 모달 이벤트 예외 처리
 					function checkModal(result) {
 
 						if (result === '' || history.state) {
@@ -343,14 +344,16 @@
 
 					}
 
+					// 게시물 수정 버튼 클릭
 					$("#regBtn").on("click", function () {
 						self.location = "/board/register";
 					});
 
+					// 페이징 링크 처리
 					var actionForm = $('#actionForm');
 
-					$(".page-item a").on("click", function(e){
-						
+					$(".page-item a").on("click", function (e) {
+
 						e.preventDefault();
 
 						console.log('click');
@@ -358,7 +361,17 @@
 						actionForm.find("input[name='pageNum']").val($(this).attr("href"));
 						actionForm.submit();
 					});
-					
+
+					$('.move').on('click', function (e) {
+
+						e.preventDefault();
+						actionForm.append("<input type='hidden' name='bno' value='" + $(this).attr("href") + "'>'");
+						actionForm.attr('action', '/board/get');
+						actionForm.submit();
+					});
+
+					console.log($(this).attr("href"));
+
 				});
 	</script>
 

@@ -219,12 +219,14 @@
       <button data-oper='modify' class="btn btn-primary">Modify</button>
       <button data-oper='list' class="btn btn-primary">List</button>
 
+      <!-- Data 전달을 위한 Hidden Form -->
       <form id="operForm" action="/board/modify" method="get">
         <input type="hidden" name="bno" id="bno" value="${board.bno}">
+        <input type="hidden" name="pageNum" value="${ cri.pageNum }">
+        <input type="hidden" name="amount" value="${ cri.amount }">
       </form>
     </div>
   </div>
-
   <!-- End of Main Content -->
 
   <!-- footer.jsp -->
