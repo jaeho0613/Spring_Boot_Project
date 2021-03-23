@@ -46,16 +46,15 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-tx</artifactId>
-			<version>5.0.7.RELEASE</version>
+			<version>${org.springframework-version}</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.springframework/spring-jdbc -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-jdbc</artifactId>
-			<version>5.0.7.RELEASE</version>
+			<version>${org.springframework-version}</version>
 		</dependency>
-
 
 		<!-- https://mvnrepository.com/artifact/org.mybatis/mybatis -->
 		<dependency>

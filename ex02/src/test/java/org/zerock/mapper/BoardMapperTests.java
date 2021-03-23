@@ -95,14 +95,26 @@ public class BoardMapperTests {
 
 	}
 
-	@Test
+//	@Test
 	public void testPaging() {
 
 		Criteria cri = new Criteria();
-		
+
 		// 10개씩 3페이지
 		cri.setPageNum(3);
 		cri.setAmount(10);
+
+		List<BoardVO> list = mapper.getListWithPaging(cri);
+
+		list.forEach(board -> log.info(board));
+	}
+
+	@Test
+	public void testSearch() {
+
+		Criteria cri = new Criteria();
+		cri.setKeyword("정재호");
+		cri.setType("W");
 
 		List<BoardVO> list = mapper.getListWithPaging(cri);
 

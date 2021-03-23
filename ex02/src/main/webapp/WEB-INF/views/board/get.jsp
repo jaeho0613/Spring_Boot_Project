@@ -16,25 +16,22 @@
     <!-- Topbar -->
     <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
-      <!-- Sidebar Toggle (Topbar) -->
-      <form class="form-inline">
-        <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-          <i class="fa fa-bars"></i>
-        </button>
-      </form>
-
-      <!-- Topbar Search -->
-      <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-        <div class="input-group">
-          <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-            aria-label="Search" aria-describedby="basic-addon2">
-          <div class="input-group-append">
-            <button class="btn btn-primary" type="button">
-              <i class="fas fa-search fa-sm"></i>
-            </button>
-          </div>
-        </div>
-      </form>
+      <!-- <form class="form-inline" id="searchForm" action="/board/list" method="GET">
+				<select class="custom-select" name="type">
+					<option value="" ${ pageMaker.cri.type==null ? 'selected' : '' }>검색옵션</option>
+					<option value="T" ${ pageMaker.cri.type eq 'T' ? 'selected' : '' }>제목</option>
+					<option value="C" ${ pageMaker.cri.type eq 'C' ? 'selected' : '' }>내용</option>
+					<option value="W" ${ pageMaker.cri.type eq 'W' ? 'selected' : '' }>작성자</option>
+					<option value="TC" ${ pageMaker.cri.type eq 'TC' ? 'selected' : '' }>제목 or 내용</option>
+					<option value="TW" ${ pageMaker.cri.type eq 'TW' ? 'selected' : '' }>제목 or 작성자</option>
+					<option value="TWC" ${ pageMaker.cri.type eq 'TWC' ? 'selected' : '' }>제목 or 내용 or 작성자</option>
+				</select>
+				<input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="keyword"
+					value="${ pageMaker.cri.keyword }">
+				<input type="hidden" name="pageNum" value="${ pageMaker.cri.pageNum }">
+				<input type="hidden" name="amount" value="${ pageMaker.cri.amount }">
+				<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+			</form> -->
 
       <!-- Topbar Navbar -->
       <ul class="navbar-nav ml-auto">
@@ -224,6 +221,8 @@
         <input type="hidden" name="bno" id="bno" value="${board.bno}">
         <input type="hidden" name="pageNum" value="${ cri.pageNum }">
         <input type="hidden" name="amount" value="${ cri.amount }">
+        <input type="hidden" name="keyword" value="${ cri.keyword }">
+        <input type="hidden" name="type" value="${ cri.type }">
       </form>
     </div>
   </div>

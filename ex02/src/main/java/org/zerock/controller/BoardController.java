@@ -32,13 +32,9 @@ public class BoardController {
 	public void list(Criteria cri, Model model) {
 
 		log.info("list: " + cri);
-		model.addAttribute("list", service.getList(cri));
-
 		int total = service.getTotal(cri);
 
-		log.info("total :" + total);
-		log.info("pageDTO " + new PageDTO(cri, total));
-
+		model.addAttribute("list", service.getList(cri));
 		model.addAttribute("pageMaker", new PageDTO(cri, total));
 	}
 
@@ -76,8 +72,10 @@ public class BoardController {
 
 		rttr.addAttribute("pageNum", cri.getPageNum());
 		rttr.addAttribute("amount", cri.getAmount());
+		rttr.addAttribute("type", cri.getType());
+		rttr.addAttribute("keyword", cri.getKeyword());
 
-		return "redirect:/board/list";
+		return "redirect:/board/list" + cri.getListLink();
 	}
 
 	@PostMapping("/remove")
@@ -89,7 +87,9 @@ public class BoardController {
 
 		rttr.addAttribute("pageNum", cri.getPageNum());
 		rttr.addAttribute("amount", cri.getAmount());
+		rttr.addAttribute("type", cri.getType());
+		rttr.addAttribute("keyword", cri.getKeyword());
 
-		return "redirect:/board/list";
+		return "redirect:/board/list" + cri.getListLink();
 	}
 }
