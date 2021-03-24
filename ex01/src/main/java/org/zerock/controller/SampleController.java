@@ -9,7 +9,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.objenesis.instantiator.basic.NewInstanceInstantiator;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -179,6 +181,8 @@ public class SampleController {
 			return "stringEx05/page2";
 		}
 	}
+	
+	
 
 	// Return VO, DTO
 	// - 복합적인 데이터가 들어간 리턴 타입의 경우 주로 JSON 데이터를 만들어 내는 용도로 사용
