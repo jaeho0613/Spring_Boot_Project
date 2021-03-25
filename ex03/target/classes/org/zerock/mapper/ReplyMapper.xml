@@ -11,7 +11,7 @@
 
 	</insert>
 
-	<select id="read" resultType="org.zerock.domain.ReplyVO">
+	<select id="get" resultType="org.zerock.domain.ReplyVO">
 
 		select * from tbl_reply where rno = #{rno}
 

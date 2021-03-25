@@ -1,6 +1,8 @@
 DROP SEQUENCE seq_board;
+drop sequence seq_reply;
 
 DROP TABLE tbl_board;
+drop table tbl_reply;
 
 COMMIT;
 
@@ -26,11 +28,11 @@ create table tbl_reply (
 
 create sequence seq_reply;
 
+ALTER TABLE tbl_board ADD CONSTRAINT pk_board PRIMARY KEY ( bno );
+
 alter table tbl_reply add constraint pk_reply primary key (rno);
 
 alter table tbl_reply add constraint fk_reply_board foreign key (bno) references tbl_board(bno);
-
-ALTER TABLE tbl_board ADD CONSTRAINT pk_board PRIMARY KEY ( bno );
 
 insert into tbl_board (bno, title, content, writer) values(seq_board.nextval, 'Test', 'Test', 'Test');
 insert into tbl_board (bno, title, content, writer) values(seq_board.nextval, 'Test', 'Test', 'Test');

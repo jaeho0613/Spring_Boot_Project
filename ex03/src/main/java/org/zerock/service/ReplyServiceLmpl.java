@@ -30,7 +30,7 @@ public class ReplyServiceLmpl implements ReplyService {
 
 		log.info("get..........." + rno);
 
-		return mapper.read(rno);
+		return mapper.get(rno);
 	}
 
 	@Override

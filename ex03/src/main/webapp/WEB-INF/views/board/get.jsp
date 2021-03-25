@@ -216,6 +216,25 @@
       <button data-oper='modify' class="btn btn-primary">Modify</button>
       <button data-oper='list' class="btn btn-primary">List</button>
 
+      <div class="row mt-5">
+        <div class="col-lg-12">
+          <div class="card">
+
+            <!-- 댓글 윗 부분 -->
+            <h5 class="card-header d-flex align-items-center">
+              <i class="fas fa-comments fa-fw mr-1"></i>
+              <span>Reply</span>
+              <button type="button" id="addReplyBtn" class="btn btn-primary ml-auto p-2">Primary</button>
+            </h5>
+
+            <!-- 댓글 폼-->
+            <ul class="chat list-group list-group-flush">
+
+            </ul>
+          </div>
+        </div>
+      </div>
+
       <!-- Data 전달을 위한 Hidden Form -->
       <form id="operForm" action="/board/modify" method="get">
         <input type="hidden" name="bno" id="bno" value="${board.bno}">
@@ -233,6 +252,106 @@
 
   </body>
 
+  <script src="/resources/js/reply.js"></script>
+
+  <!-- Reply 이벤트 처리 -->
+  <script>
+    $(document).ready(function () {
+
+      var bnoValue = "${ board.bno }";
+      var replyUL = $(".chat");
+
+      showList(1);
+
+      function showList(page) {
+
+        replyService.getList({
+          bno: bnoValue,
+          page: page || 1
+        }, function (list) {
+
+          var str = "";
+          if (list == null || list.length == 0) {
+            replyUL.html("");
+
+            return;
+          }
+
+          for (let i = 0, len = list.length || 0; i < len; i++) {
+
+            str += "<li class='list-group-item data-rno='" + list[i].rno + "'>";
+            str += "<div class='card-body'>";
+            str += "<div class='header d-flex justify-content-between'>" +
+              "<h5 class='card-title'>" + list[i].replyer + "</h5>" +
+              "<small class='pull-rigth text-rigth'>" + replyService.displayTime(list[i].replyDate) +
+              "</small></div>";
+            str += "<p class='card-text'>" + list[i].reply + "</p></div></li>";
+          }
+
+          replyUL.html(str);
+        });
+      }
+    });
+  </script>
+
+  <!-- Reply Rest API Test -->
+  <script>
+    console.log("================");
+
+    var bnoValue = "${board.bno}";
+
+    // 댓글 추가
+    // replyService.add({
+    //     reply: "JS TEST",
+    //     replyer: "tester",
+    //     bno: bnoValue
+    //   },
+    //   function (result) {
+    //     alert("Result :" + result);
+    //   }
+    // );
+
+    // 댓글 리스트 가져오기
+    // replyService.getList({
+    //   bno: bnoValue,
+    //   page: 1
+    // }, function (list) {
+
+    //   for (var i = 0, len = list.length || 0; i < len; i++) {
+    //     console.log(list[i]);
+    //   }
+    // });
+
+    // 댓글 삭제 (4번)
+    // replyService.remove(4, function (count) {
+
+    //   console.log(count);
+
+    //   if (count === "success") {
+    //     alert("REMOVED");
+    //   }
+    // }, function (err) {
+    //   alert("ERROR...");
+    // });
+
+    // 댓글 수정 (22번)
+    // replyService.update({
+    //   rno: 1,
+    //   bno: bnoValue,
+    //   reply: "Modified Reply....",
+    //   replyer: "user00"
+    // }, function (result) {
+    //   alert("수정 완료......");
+    // });
+
+    // 특정 번호의 댓글 조회 (10번)
+    // replyService.get(10, function (data) {
+    //   console.log("get!!");
+    //   console.log(data);
+    // });
+  </script>
+
+  <!-- form 조작 스크립트 -->
   <script>
     $(document).ready(function () {
 

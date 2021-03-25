@@ -39,12 +39,12 @@ public class ReplyMapperTests {
 		});
 	}
 
-//	@Test
+	@Test
 	public void testRead() {
 
 		Long targetRno = 5L;
 
-		ReplyVO vo = mapper.read(targetRno);
+		ReplyVO vo = mapper.get(targetRno);
 
 		log.info(vo);
 	}
@@ -66,7 +66,7 @@ public class ReplyMapperTests {
 
 		Long targetRno = 10L;
 
-		ReplyVO vo = mapper.read(targetRno);
+		ReplyVO vo = mapper.get(targetRno);
 
 		vo.setReply("Update Reply ");
 
@@ -75,7 +75,7 @@ public class ReplyMapperTests {
 		log.info("Update Count : " + count);
 	}
 
-	@Test
+//	@Test
 	public void testList() {
 
 		Criteria cri = new Criteria();

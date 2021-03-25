@@ -10,6 +10,8 @@ SELECT * FROM tbl_board ORDER BY bno + 1 DESC;
 -- 실행이 빠른 쿼리문 (역순으로 찾기)
 SELECT * FROM tbl_board ORDER BY bno DESC;
 
+SELECT * FROM tbl_board ORDER BY bno asc;
+
 -- 전체 카운트 
 SELECT COUNT(*) FROM tbl_board;
 

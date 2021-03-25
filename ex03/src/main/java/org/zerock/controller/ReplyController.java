@@ -52,7 +52,8 @@ public class ReplyController {
 
 		Criteria cri = new Criteria(page, 10);
 
-		log.info(cri);
+		// log.info(cri);
+		log.info(service.getList(cri, bno));
 
 		return new ResponseEntity<>(service.getList(cri, bno), HttpStatus.OK);
 	}
@@ -61,6 +62,7 @@ public class ReplyController {
 	public ResponseEntity<ReplyVO> get(@PathVariable("rno") Long rno) {
 
 		log.info("get : " + rno);
+		log.info("ReplyVO GET : " + service.get(rno));
 
 		return new ResponseEntity<ReplyVO>(service.get(rno), HttpStatus.OK);
 	}
