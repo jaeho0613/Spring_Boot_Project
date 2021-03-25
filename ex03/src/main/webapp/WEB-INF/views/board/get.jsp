@@ -236,6 +236,18 @@
         </div>
       </div>
 
+      <div class="panel-footer">
+        <!-- <nav aria-label="Page navigation example" class="justify-content-center d-flex">
+          <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+          </ul>
+        </nav> -->
+      </div>
+
       <!-- Data 전달을 위한 Hidden Form -->
       <form id="operForm" action="/board/modify" method="get">
         <input type="hidden" name="bno" id="bno" value="${board.bno}">
@@ -307,15 +319,25 @@
 
       function showList(page) {
 
+        console.log("show list " + page);
+
         replyService.getList({
           bno: bnoValue,
           page: page || 1
-        }, function (list) {
+        }, function (replyCnt, list) {
+
+          console.log("replyCnt : " + replyCnt);
+          console.log("list: " + list);
+
+          if (page == -1) {
+            pageNum = Math.ceil(replyCnt / 10.0);
+            showList(pageNum);
+            return;
+          }
 
           var str = "";
-          if (list == null || list.length == 0) {
-            replyUL.html("");
 
+          if (list == null || list.length == 0) {
             return;
           }
 
@@ -331,7 +353,9 @@
           }
 
           replyUL.html(str);
-        });
+
+          showReplyPage(replyCnt);
+        }); // end Function
       } // end showList
 
       var modal = $(".modal");
@@ -370,7 +394,9 @@
           modal.find("input").val("");
           modal.modal("hide");
 
-          showList(1);
+          // showList(1);
+          showList(-1);
+
         });
       });
 
@@ -409,10 +435,11 @@
 
           alert(result);
           modal.modal("hide");
-          showList(1);
+          showList(pageNum);
         });
       });
 
+      // 댓글 삭제
       modalRemoveBtn.on("click", function (e) {
         var rno = modal.data("rno");
 
@@ -420,69 +447,125 @@
 
           alert(result);
           modal.modal("hide");
-          showList(1);
+          showList(pageNum);
         });
+      });
+
+      var pageNum = 1;
+      var replyPageFooter = $(".panel-footer");
+
+      function showReplyPage(replyCnt) {
+
+        var endNum = Math.ceil(pageNum / 10.0) * 10;
+        var startNum = endNum - 9;
+
+        var prev = startNum != 1;
+        var next = false;
+
+        if (endNum * 10 >= replyCnt) {
+          endNum = Math.ceil(replyCnt / 10.0);
+        }
+
+        if (endNum * 10 < replyCnt) {
+          next = true;
+        }
+
+        var str = "<nav aria-label='Page navigation example' class='justify-content-center d-flex'>";
+        str += "<ul class='pagination'>";
+
+        if (prev) {
+          str += "<li class='page-item'><a class='page-link' href='" + (startNum - 1) + "'>Previous</a></li>";
+        }
+
+        for (var i = startNum; i <= endNum; i++) {
+          var active = pageNum == i ? "active" : "";
+
+          str += "<li class='page-item " + active + "'><a class='page-link' href='" + i + "'>" + i + "</a></li>";
+        }
+
+        if (next) {
+          str += "<li class='page-item'><a class='page-link' href='" + (endNum + 1) + "'>Next</a></li>";
+        }
+
+        str += "</ul></nav>";
+
+        console.log(str);
+
+        replyPageFooter.html(str);
+      }
+
+      replyPageFooter.on("click", "li a", function (e) {
+        e.preventDefault();
+        console.log("page click");
+
+        var targetPageNum = $(this).attr("href");
+
+        console.log("targetPageNum: " + targetPageNum);
+
+        pageNum = targetPageNum;
+
+        showList(pageNum);
       });
 
     });
   </script>
 
   <!-- Reply Rest API Test -->
-  <script>
+  <!-- <script>
     console.log("================");
 
     var bnoValue = "${board.bno}";
 
     // 댓글 추가
-    // replyService.add({
-    //     reply: "JS TEST",
-    //     replyer: "tester",
-    //     bno: bnoValue
-    //   },
-    //   function (result) {
-    //     alert("Result :" + result);
-    //   }
-    // );
+    replyService.add({
+        reply: "JS TEST",
+        replyer: "tester",
+        bno: bnoValue
+      },
+      function (result) {
+        alert("Result :" + result);
+      }
+    );
 
     // 댓글 리스트 가져오기
-    // replyService.getList({
-    //   bno: bnoValue,
-    //   page: 1
-    // }, function (list) {
+    replyService.getList({
+      bno: bnoValue,
+      page: 1
+    }, function (list) {
 
-    //   for (var i = 0, len = list.length || 0; i < len; i++) {
-    //     console.log(list[i]);
-    //   }
-    // });
+      for (var i = 0, len = list.length || 0; i < len; i++) {
+        console.log(list[i]);
+      }
+    });
 
     // 댓글 삭제 (4번)
-    // replyService.remove(4, function (count) {
+    replyService.remove(4, function (count) {
 
-    //   console.log(count);
+      console.log(count);
 
-    //   if (count === "success") {
-    //     alert("REMOVED");
-    //   }
-    // }, function (err) {
-    //   alert("ERROR...");
-    // });
+      if (count === "success") {
+        alert("REMOVED");
+      }
+    }, function (err) {
+      alert("ERROR...");
+    });
 
     // 댓글 수정 (22번)
-    // replyService.update({
-    //   rno: 1,
-    //   bno: bnoValue,
-    //   reply: "Modified Reply....",
-    //   replyer: "user00"
-    // }, function (result) {
-    //   alert("수정 완료......");
-    // });
+    replyService.update({
+      rno: 1,
+      bno: bnoValue,
+      reply: "Modified Reply....",
+      replyer: "user00"
+    }, function (result) {
+      alert("수정 완료......");
+    });
 
     // 특정 번호의 댓글 조회 (10번)
-    // replyService.get(10, function (data) {
-    //   console.log("get!!");
-    //   console.log(data);
-    // });
-  </script>
+    replyService.get(10, function (data) {
+      console.log("get!!");
+      console.log(data);
+    });
+  </script> -->
 
   <!-- form 조작 스크립트 -->
   <script>
