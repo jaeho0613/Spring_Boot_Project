@@ -39,7 +39,7 @@ public class ReplyMapperTests {
 		});
 	}
 
-	@Test
+//	@Test
 	public void testRead() {
 
 		Long targetRno = 5L;
@@ -86,4 +86,15 @@ public class ReplyMapperTests {
 		replies.forEach(reply -> log.info(reply));
 	}
 
+//	@Test
+	public void testList2() {
+
+		Criteria criteria = new Criteria(2, 10);
+
+		// 327680L
+		List<ReplyVO> replies = mapper.getListWithPaging(criteria, 327680L);
+		System.out.println("Rplies Size : " + replies.size());
+
+		replies.forEach(reply -> log.info(reply));
+	}
 }

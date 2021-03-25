@@ -8,6 +8,8 @@ COMMIT;
 
 CREATE SEQUENCE seq_board;
 
+create sequence seq_reply;
+
 CREATE TABLE tbl_board (
     bno         NUMBER(10, 0),
     title       VARCHAR2(200) NOT NULL,
@@ -26,13 +28,14 @@ create table tbl_reply (
     updateDate date default sysdate
 );
 
-create sequence seq_reply;
 
 ALTER TABLE tbl_board ADD CONSTRAINT pk_board PRIMARY KEY ( bno );
 
 alter table tbl_reply add constraint pk_reply primary key (rno);
 
 alter table tbl_reply add constraint fk_reply_board foreign key (bno) references tbl_board(bno);
+
+create index idx_reply on tbl_reply (bno desc, rno asc);
 
 insert into tbl_board (bno, title, content, writer) values(seq_board.nextval, 'Test', 'Test', 'Test');
 insert into tbl_board (bno, title, content, writer) values(seq_board.nextval, 'Test', 'Test', 'Test');
