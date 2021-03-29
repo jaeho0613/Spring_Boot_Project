@@ -228,7 +228,7 @@
 										<td>
 											<a class="move" href="${ board.bno }">${ board.bno }</a>
 										</td>
-										<td>${ board.title }</td>
+										<td>${ board.title }<b>[${ board.replyCnt }]</b></td>
 										<td>${ board.writer }</td>
 										<td>
 											<fmt:formatDate value="${ board.regdate }" pattern="yyyy-MM-dd" />

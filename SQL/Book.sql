@@ -1,7 +1,10 @@
-DROP SEQUENCE seq_board;
+--desc user_objects;
+select object_name, object_type from user_objects;
+
+drop sequence seq_board;
 drop sequence seq_reply;
 
-DROP TABLE tbl_board;
+drop table tbl_board;
 drop table tbl_reply;
 
 COMMIT;
@@ -28,24 +31,19 @@ create table tbl_reply (
     updateDate date default sysdate
 );
 
-
 ALTER TABLE tbl_board ADD CONSTRAINT pk_board PRIMARY KEY ( bno );
-
 alter table tbl_reply add constraint pk_reply primary key (rno);
-
 alter table tbl_reply add constraint fk_reply_board foreign key (bno) references tbl_board(bno);
-
 create index idx_reply on tbl_reply (bno desc, rno asc);
 
-insert into tbl_board (bno, title, content, writer) values(seq_board.nextval, 'Test', 'Test', 'Test');
-insert into tbl_board (bno, title, content, writer) values(seq_board.nextval, 'Test', 'Test', 'Test');
-insert into tbl_board (bno, title, content, writer) values(seq_board.nextval, 'Test', 'Test', 'Test');
-insert into tbl_board (bno, title, content, writer) values(seq_board.nextval, 'Test', 'Test', 'Test');
-insert into tbl_board (bno, title, content, writer) values(seq_board.nextval, 'Test', 'Test', 'Test');
+insert into tbl_board(bno, title, content, writer) values(seq_board.nextval, 'Test', 'Test', 'Test');
 
 INSERT INTO tbl_board ( bno, title, content, writer)
     ( SELECT seq_board.NEXTVAL, title, content, writer
       FROM tbl_board
     );
+    
+alter table tbl_board add (replyCnt number default 0);
+update tbl_board set replyCnt = (select count(rno) from tbl_reply where tbl_reply.bno = tbl_board.bno);
 
 COMMIT;
