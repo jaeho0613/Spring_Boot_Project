@@ -20,24 +20,24 @@ public class UploadController {
 	}
 
 	@PostMapping("/uploadAjaxAction")
-	public void uploadAjaxPost(MultipartFile[] uploadfile) {
+	public void uploadAjaxPost(MultipartFile[] uploadFile) {
 
 		log.info("update ajax post.......");
 
 		String uploadFolder = "C:\\upload";
 
-		for (MultipartFile multipartFile : uploadfile) {
-			log.info("------------------");
-			log.info("Upload File Name : " + multipartFile.getOriginalFilename());
-			log.info("Upload File Size : " + multipartFile.getSize());
+		log.info(uploadFile.length);
 
+		for (MultipartFile multipartFile : uploadFile) {
+			log.info("------------------------------------------");
+			log.info("Upload File Name: " + multipartFile.getOriginalFilename());
+			log.info("Upload File Size: " + multipartFile.getSize());
+			
 			String uploadFileName = multipartFile.getOriginalFilename();
 
 			// IE has file path
 			uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("\\") + 1);
-			log.info("only file name: " + uploadFileName);
-
-			File saveFile = new File(uploadFolder, uploadFileName);
+			File saveFile = new File(uploadFolder, multipartFile.getOriginalFilename());
 
 			try {
 				multipartFile.transferTo(saveFile);

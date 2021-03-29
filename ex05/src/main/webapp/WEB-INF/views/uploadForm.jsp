@@ -11,7 +11,7 @@
 </head>
 
 <body>
-  <h1>Upload with Ajax</h1>
+  <h1>Upload with Form</h1>
   
   <form action="uploadFormAction" method="post" enctype="multipart/form-data">
     <input type="file" name="uploadFile" multiple>
