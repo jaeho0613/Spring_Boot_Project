@@ -80,9 +80,14 @@
 
 				$(uploadresultArr).each(function (i, obj) {
 					if (!obj.image) {
-						str += "<li><img src='/resources/img/1.png'>" +
-							obj.fileName + "</li>";
+
+						var fileCallPath = encodeURIComponent(obj.uploadPath + "/" + obj.uuid + "_" + obj.fileName);
+
+						str += "<li><a href='/download?fileName=" + fileCallPath + "'>"
+							+"<img src='/resources/img/1.png'>" +
+							obj.fileName + "</a></li>";
 					} else {
+
 						// str += "<li>" + obj.fileName + "</li>";
 						var fileCallPath = encodeURIComponent(obj.uploadPath + "/s_" + obj.uuid + "_" + obj.fileName);
 
