@@ -1,6 +1,9 @@
 package org.zerock.controller;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
@@ -12,11 +15,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.extern.log4j.Log4j;
-import sun.util.logging.resources.logging_fr;
+import net.coobird.thumbnailator.Thumbnailator;
 
 @Controller
 @Log4j
 public class UploadController {
+
+	private boolean checkImageType(File file) {
+
+		try {
+			String contentType = Files.probeContentType(file.toPath());
+			return contentType.startsWith("image");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return false;
+	}
 
 	public String getFolder() {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -57,16 +72,24 @@ public class UploadController {
 			// IE has file path
 			uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("\\") + 1);
 			log.info("only file name: " + uploadFileName);
-			
+
 			UUID uuid = UUID.randomUUID();
-			
+
 			uploadFileName = uuid.toString() + "_" + uploadFileName;
 
 			// File saveFile = new File(uploadFolder, multipartFile.getOriginalFilename());
-			File saveFile = new File(uploadPath, uploadFileName);
 
 			try {
+
+				File saveFile = new File(uploadPath, uploadFileName);
 				multipartFile.transferTo(saveFile);
+				
+				if (checkImageType(saveFile)) {
+					FileOutputStream thumbnail = new FileOutputStream(new File(uploadPath, "s+" + uploadFileName));
+					Thumbnailator.createThumbnail(multipartFile.getInputStream(), thumbnail, 100, 100);
+					thumbnail.close();
+				}
+				
 			} catch (Exception e) {
 				log.error(e.getMessage());
 			}

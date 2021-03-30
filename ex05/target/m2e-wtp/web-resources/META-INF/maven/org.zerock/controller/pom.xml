@@ -17,6 +17,14 @@
 	<dependencies>
 
 		<!-- import library -->
+
+		<!-- https://mvnrepository.com/artifact/net.coobird/thumbnailator -->
+		<dependency>
+			<groupId>net.coobird</groupId>
+			<artifactId>thumbnailator</artifactId>
+			<version>0.4.7</version>
+		</dependency>
+
 		<!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -99,7 +107,7 @@
 					<artifactId>jmxri</artifactId>
 				</exclusion>
 			</exclusions>
- 		</dependency>
+		</dependency>
 
 		<!-- @Inject -->
 		<dependency>
