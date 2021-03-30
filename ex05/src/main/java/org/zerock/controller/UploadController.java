@@ -5,14 +5,21 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.zerock.domain.AttachFileDTO;
 
 import lombok.extern.log4j.Log4j;
 import net.coobird.thumbnailator.Thumbnailator;
@@ -48,10 +55,14 @@ public class UploadController {
 		log.info("upload ajax");
 	}
 
-	@PostMapping("/uploadAjaxAction")
-	public void uploadAjaxPost(MultipartFile[] uploadFile) {
+	@PostMapping(value = "/uploadAjaxAction", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@ResponseBody
+	public ResponseEntity<List<AttachFileDTO>> uploadAjaxPost(MultipartFile[] uploadFile) {
 
+		List<AttachFileDTO> list = new ArrayList<AttachFileDTO>();
 		String uploadFolder = "C:\\upload";
+
+		String uploadFolderPath = getFolder();
 
 		// make folder
 		File uploadPath = new File(uploadFolder, getFolder());
@@ -63,9 +74,8 @@ public class UploadController {
 		}
 
 		for (MultipartFile multipartFile : uploadFile) {
-			log.info("------------------------------------------");
-			log.info("Upload File Name: " + multipartFile.getOriginalFilename());
-			log.info("Upload File Size: " + multipartFile.getSize());
+
+			AttachFileDTO attachDTO = new AttachFileDTO();
 
 			String uploadFileName = multipartFile.getOriginalFilename();
 
@@ -83,17 +93,28 @@ public class UploadController {
 
 				File saveFile = new File(uploadPath, uploadFileName);
 				multipartFile.transferTo(saveFile);
-				
+
+				attachDTO.setUuid(uuid.toString());
+				attachDTO.setUploadPath(uploadFolderPath);
+
 				if (checkImageType(saveFile)) {
+
+					attachDTO.setImage(true);
+
 					FileOutputStream thumbnail = new FileOutputStream(new File(uploadPath, "s+" + uploadFileName));
 					Thumbnailator.createThumbnail(multipartFile.getInputStream(), thumbnail, 100, 100);
 					thumbnail.close();
 				}
-				
+
+				// add to list
+				list.add(attachDTO);
+
 			} catch (Exception e) {
 				log.error(e.getMessage());
 			}
 		}
+
+		return new ResponseEntity<List<AttachFileDTO>>(list, HttpStatus.OK);
 	}
 
 	@GetMapping("/uploadForm")

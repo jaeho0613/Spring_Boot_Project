@@ -62,9 +62,10 @@
 					processData: false,
 					contentType: false,
 					data: formData,
+					dataType: 'json',
 					type: 'POST',
 					success: function (result) {
-						alert("Uploaded");
+						console.log(result);
 					}
 				});
 			});
