@@ -13,6 +13,12 @@
 <body>
 	<h1>Upload with Ajax</h1>
 
+	<div class="bigPicturewrapper">
+		<div class="bigPicture">
+
+		</div>
+	</div>
+
 	<style>
 		.uploadResult {
 			width: 100%;
@@ -32,7 +38,31 @@
 		}
 
 		.uploadResult ul li img {
-			width: 20px;
+			width: 100px;
+		}
+
+		.bigPicturewrapper {
+			position: absolute;
+			display: none;
+			justify-content: center;
+			align-items: center;
+			top: 0%;
+			width: 100%;
+			height: 100%;
+			background-color: gray;
+			z-index: 100;
+			background: rgba(107, 107, 107, 0.5);
+		}
+
+		.bigPicture {
+			position: relative;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		.bigPicture img {
+			width: 600px;
 		}
 	</style>
 
@@ -46,12 +76,36 @@
 		</ul>
 	</div>
 
+
+
 	<button id="uploadBtn">Upload</button>
 
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js"
 		integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 
 	<script>
+		function showImage(fileCallPath) {
+			// alert(fileCallPath);
+
+			$(".bigPicturewrapper").css("disply", "flex").show();
+
+			$(".bigPicture").html("<img src='/display?fileName=" + encodeURI(fileCallPath) + "'>")
+				.animate({
+					width: '100%',
+					height: '100%'
+				}, 1000);
+
+			$(".bigPicturewrapper").on("click", function (e) {
+				$(".bigPicture").animate({
+					width: '0%',
+					height: '0%'
+				}, 1000);
+				setTimeout(() => {
+					$(this).hide();
+				}, 1000);
+			});
+		}
+
 		$(document).ready(function () {
 
 			var regex = new RegExp("(.*?)\.(exe|sh|zip|alz)$");
@@ -83,15 +137,19 @@
 
 						var fileCallPath = encodeURIComponent(obj.uploadPath + "/" + obj.uuid + "_" + obj.fileName);
 
-						str += "<li><a href='/download?fileName=" + fileCallPath + "'>"
-							+"<img src='/resources/img/1.png'>" +
-							obj.fileName + "</a></li>";
+						str += "<li><a href='/download?fileName=" + fileCallPath + "'>" +
+							"<img src='/resources/img/1.png'>" + obj.fileName + "</a></li>";
 					} else {
 
 						// str += "<li>" + obj.fileName + "</li>";
 						var fileCallPath = encodeURIComponent(obj.uploadPath + "/s_" + obj.uuid + "_" + obj.fileName);
 
-						str += "<li><img src='/display?fileName=" + fileCallPath + "'></li>";
+						var originPath = obj.uploadPath + "\\" + obj.uuid + "_" + obj.fileName;
+
+						originPath = originPath.replace(new RegExp(/\\/g), "/");
+
+						str += "<li><a href=\"javascript:showImage(\'" + originPath + "\')\"><img src='/display?fileName=" +
+							fileCallPath + "'></a><li>";
 					}
 				});
 
