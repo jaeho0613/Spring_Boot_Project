@@ -17,21 +17,21 @@
     <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
       <form class="form-inline" id="searchForm" action="/board/list" method="GET">
-				<select class="custom-select" name="type">
-					<option value="" ${ pageMaker.cri.type==null ? 'selected' : '' }>검색옵션</option>
-					<option value="T" ${ pageMaker.cri.type eq 'T' ? 'selected' : '' }>제목</option>
-					<option value="C" ${ pageMaker.cri.type eq 'C' ? 'selected' : '' }>내용</option>
-					<option value="W" ${ pageMaker.cri.type eq 'W' ? 'selected' : '' }>작성자</option>
-					<option value="TC" ${ pageMaker.cri.type eq 'TC' ? 'selected' : '' }>제목 or 내용</option>
-					<option value="TW" ${ pageMaker.cri.type eq 'TW' ? 'selected' : '' }>제목 or 작성자</option>
-					<option value="TWC" ${ pageMaker.cri.type eq 'TWC' ? 'selected' : '' }>제목 or 내용 or 작성자</option>
-				</select>
-				<input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="keyword"
-					value="${ pageMaker.cri.keyword }">
-				<input type="hidden" name="pageNum" value="${ pageMaker.cri.pageNum }">
-				<input type="hidden" name="amount" value="${ pageMaker.cri.amount }">
-				<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-			</form>
+        <select class="custom-select" name="type">
+          <option value="" ${ pageMaker.cri.type==null ? 'selected' : '' }>검색옵션</option>
+          <option value="T" ${ pageMaker.cri.type eq 'T' ? 'selected' : '' }>제목</option>
+          <option value="C" ${ pageMaker.cri.type eq 'C' ? 'selected' : '' }>내용</option>
+          <option value="W" ${ pageMaker.cri.type eq 'W' ? 'selected' : '' }>작성자</option>
+          <option value="TC" ${ pageMaker.cri.type eq 'TC' ? 'selected' : '' }>제목 or 내용</option>
+          <option value="TW" ${ pageMaker.cri.type eq 'TW' ? 'selected' : '' }>제목 or 작성자</option>
+          <option value="TWC" ${ pageMaker.cri.type eq 'TWC' ? 'selected' : '' }>제목 or 내용 or 작성자</option>
+        </select>
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="keyword"
+          value="${ pageMaker.cri.keyword }">
+        <input type="hidden" name="pageNum" value="${ pageMaker.cri.pageNum }">
+        <input type="hidden" name="amount" value="${ pageMaker.cri.amount }">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      </form>
 
       <!-- Topbar Navbar -->
       <ul class="navbar-nav ml-auto">
@@ -212,14 +212,162 @@
         <button type="reset" class="btn btn-primary">Reset Button</button>
 
       </form>
+
+      <div class="input-group mt-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text">File Attach</span>
+        </div>
+        <div class="custom-file uploadDiv">
+          <input type="file" class="custom-file-input" id="inputGroupFile01" name="uploadFile" multiple>
+          <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+        </div>
+      </div>
+      <div class="uploadResult mt-3">
+        <ul class="list-group list-group-horizontal">
+
+        </ul>
+      </div>
     </div>
   </div>
-
   <!-- End of Main Content -->
 
   <!-- footer.jsp -->
   <jsp:include page="../includes/footer.jsp"></jsp:include>
 
   </body>
+
+  <script>
+    $(document).ready(function (e) {
+      var formObj = $("form[role='form']");
+
+      // JS에서 클릭 처리 (기본 클릭 이벤트 중지)
+      $("button[type='submit']").on('click', function (e) {
+        e.preventDefault();
+
+        console.log("submit clicked");
+      });
+
+      var regex = new RegExp("(.*?)\.(exe|sh|zip|alz)$");
+      var maxSize = 5242880; // 5mb
+
+      // 파일 감지 함수
+      function checkExtension(fileName, fileSize) {
+        if (fileSize > maxSize) {
+          alert("파일 사이즈 초과");
+          return false;
+        }
+
+        if (regex.test(fileName)) {
+          alert("해당 종류의 파일은 업로드할 수 없습니다.");
+          return false;
+        }
+
+        return true;
+      }
+
+      // 첨부 이미지 보여주기
+      function showUploadResult(uploadresultArr) {
+
+        if (!uploadresultArr || uploadresultArr.length == 0) {
+          return;
+        }
+
+        var uploadUL = $(".uploadResult ul");
+
+        var str = "";
+
+        $(uploadresultArr).each(function (i, obj) {
+          if (obj.image) {
+
+            var fileCallPath = encodeURIComponent(obj.uploadPath + "/s_" + obj.uuid + "_" + obj.fileName);
+
+            str += '<li><div>';
+            str += "<span> " + obj.fileName + "</span>";
+            str +=
+              "<button type='button' data-file=\'" + fileCallPath +
+              "\' data-type='image'  class='btn btn-warning btn-circle'><i class='fa fa-times'></i></button><br>";
+            str += "<img src='/display?fileName=" + fileCallPath + "'>";
+            str += "</div>";
+            str += "</li>";
+
+          } else {
+
+            var fileCallPath = encodeURIComponent(obj.uploadPath + "/" + obj.uuid + "_" + obj.fileName);
+
+            var fileLink = fileCallPath.replace(new RegExp(/\\/g), "/");
+
+            str += "<li><div>";
+            str += "<span> " + obj.fileName + "</span>";
+            str +=
+              "<button type='button' data-file=\'" + fileCallPath +
+              "\' data-type='image' class='btn btn-warning btn-circle'><i class='fa fa-times'></i></button><br>";
+            str += "<img src='/resources/img/attach.png'></a>";
+            str += "</div>";
+            str += "</li>";
+          }
+        });
+
+        uploadUL.append(str);
+      }
+
+
+
+      // 파일 변경시 발생 이벤트
+      // - change 메서드는 element의 change 되었을 때 이벤트 발생
+      $("input[type='file']").change(function (e) {
+        var formData = new FormData();
+
+        var inputFile = $("input[name='uploadFile']");
+
+        var files = inputFile[0].files;
+
+        for (var i = 0; i < files.length; i++) {
+
+          if (!checkExtension(files[i].name, files[i].size)) {
+            return false;
+          }
+
+          formData.append("uploadFile", files[i]);
+        }
+
+        $.ajax({
+          url: '/uploadAjaxAction',
+          processData: false,
+          contentType: false,
+          data: formData,
+          type: 'post',
+          dataType: 'json',
+          success: function (result) {
+            console.log(result);
+            showUploadResult(result); // 업로드 결과 처리 함수
+          }
+        })
+      });
+
+      // 첨부 파일 X 버튼 클릭 이벤트
+      $(".uploadResult").on("click", "button", function (e) {
+        console.log("delete file");
+
+        var targetFile = $(this).data("file");
+        var type = $(this).data("type");
+
+        var targetLi = $(this).closest("li");
+
+        $.ajax({
+          url: '/deleteFile',
+          data: {
+            fileName: targetFile,
+            type: type
+          },
+          dataType: 'text',
+          type: 'post',
+          success: function (result) {
+            alert(result);
+            targetLi.remove();
+          }
+        })
+      });
+    });
+  </script>
 
   </html>
