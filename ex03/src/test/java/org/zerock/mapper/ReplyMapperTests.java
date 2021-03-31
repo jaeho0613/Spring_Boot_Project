@@ -24,6 +24,7 @@ public class ReplyMapperTests {
 	@Setter(onMethod_ = @Autowired)
 	private ReplyMapper mapper;
 
+//	@Test
 	public void testCreate() {
 
 		IntStream.rangeClosed(1, 10).forEach(i -> {
@@ -75,7 +76,7 @@ public class ReplyMapperTests {
 		log.info("Update Count : " + count);
 	}
 
-//	@Test
+	@Test
 	public void testList() {
 
 		Criteria cri = new Criteria();
