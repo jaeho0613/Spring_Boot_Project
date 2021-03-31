@@ -589,4 +589,19 @@
     });
   </script>
 
+  <script>
+    $(document).ready(function () {
+
+      (function () {
+        var bno = '${board.bno}';
+
+        $.getJSON("/board/getAttachList", {
+          bno: bno
+        }, function (arr) {
+          console.log(arr);
+        }); // end getjson
+      })(); // end function
+    });
+  </script>
+
   </html>
