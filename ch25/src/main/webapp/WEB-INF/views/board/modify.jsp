@@ -7,6 +7,57 @@
 <!-- Heaer.jsp -->
 <jsp:include page="../includes/header.jsp"></jsp:include>
 
+<style>
+	.uploadResult {
+		width: 100%;
+		background-color: gray;
+	}
+
+	.uploadResult ul {
+		display: flex;
+		flex-flow: row;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.uploadResult ul li {
+		list-style: none;
+		padding: 10px;
+	}
+
+	.uploadResult ul li img {
+		width: 100px;
+	}
+
+	.uploadResult ul li span {
+		color: wheat;
+	}
+
+	.bigPictureWrapper {
+		position: absolute;
+		display: none;
+		justify-content: center;
+		align-items: center;
+		top: 0%;
+		width: 100%;
+		height: 100%;
+		background-color: gray;
+		z-index: 100;
+		background: rgba(107, 107, 107, 0.5);
+	}
+
+	.bigPicture {
+		position: relative;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.bigPicture img {
+		width: 600px;
+	}
+</style>
+
 <!-- Content Wrapper -->
 <div id="content-wrapper" class="d-flex flex-column">
 
@@ -237,6 +288,20 @@
 				<input type="hidden" name="keyword" value="${ cri.keyword }">
 				<input type="hidden" name="type" value="${ cri.type }">
 
+				<div class="input-group mt-3">
+					<div class="input-group-prepend">
+						<span class="input-group-text">File Attach</span>
+					</div>
+					<div class="custom-file uploadDiv">
+						<input type="file" class="custom-file-input" id="inputGroupFile01" name="uploadFile" multiple>
+						<label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+					</div>
+				</div>
+				<div class="uploadResult mt-3">
+					<ul class="list-group list-group-horizontal">
+
+					</ul>
+				</div>
 			</form>
 		</div>
 	</div>
@@ -279,6 +344,63 @@
 				formObj.submit();
 			});
 
+		});
+	</script>
+
+	<script>
+		$(document).ready(function () {
+
+			// 첨부 파일 보여주기
+			(function () {
+				var bno = '${board.bno}';
+
+				$.getJSON("/board/getAttachList", {
+					bno: bno
+				}, function (arr) {
+					console.log(arr);
+
+					var str = "";
+
+					$(arr).each(function (i, attach) {
+						// image Type
+						if (attach.fileType) {
+							var fileCallPath = encodeURIComponent(attach.uploadPath + "/s_" + attach.uuid + "_" + attach
+								.fileName);
+
+							str += "<li data-path='" + attach.uploadPath + "' data-uuid=" + attach.uuid +
+								" data-filename='" + attach.fileName + "' data-type='" + attach.fileType + "' ><div>";
+							str += "<span> " + attach.fileName + "</span>";
+							str += "<button type='button' data-file=\'" + fileCallPath + "\' data-type='image' ";
+							str += "class='btn btn-warning btn-circle'><i class='fa fa-times'></i></button><br>";
+							str += "<img src='/display?fileName=" + fileCallPath + "'>";
+							str += "</div>";
+							str += "</li>";
+						} else {
+
+							str += "<li data-path='" + attach.uploadPath + "' data-uuid=" + attach.uuid +
+								" data-filename='" + attach.fileName + "' data-type='" + attach.fileType + "' ><div>";
+							str += "<span> " + attach.fileName + "</span>";
+							str += "<button type='button' data-file=\'" + fileCallPath + "\' data-type='file' ";
+							str += "class='btn btn-warning btn-circle'><i class='fa fa-times'></i></button><br>";
+							str += "<img src='/resources/img/attach.png'>";
+							str += "</div>";
+							str += "</li>";
+						}
+					});
+
+					$(".uploadResult ul").html(str);
+
+				}); // end getjson
+			})(); // end function
+
+			$(".uploadResult").on("click", "button", function (e) {
+				console.log("delete file");
+
+				if (confirm("Remove this file? ")) {
+					var targetLi = $(this).closest("li");
+					targetLi.remove();
+				}
+			});
 		});
 	</script>
 

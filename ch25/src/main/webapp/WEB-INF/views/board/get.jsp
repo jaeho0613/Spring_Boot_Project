@@ -7,8 +7,6 @@
 <!-- Heaer.jsp -->
 <jsp:include page="../includes/header.jsp"></jsp:include>
 
-
-
 <style>
   .uploadResult {
     width: 100%;
@@ -612,7 +610,7 @@
 
       function showImage(fileCallPath) {
 
-        alert(fileCallPath);
+        // alert(fileCallPath);
 
         $(".bigPictureWrapper").css("display", "flex").show();
 
