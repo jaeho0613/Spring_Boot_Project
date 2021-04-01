@@ -315,83 +315,81 @@
 	</body>
 
 	<script type="text/javascript">
-		$(document)
-			.ready(
-				function () {
+		$(document).ready(function () {
 
-					var result = '${result}';
+			var result = '${result}';
 
-					checkModal(result);
+			checkModal(result);
 
-					// 웹 히스토리 초기화
-					history.replaceState({}, null, null);
+			// 웹 히스토리 초기화
+			history.replaceState({}, null, null);
 
-					// 페이지 모달 이벤트 예외 처리
-					function checkModal(result) {
+			// 페이지 모달 이벤트 예외 처리
+			function checkModal(result) {
 
-						if (result === '' || history.state) {
-							return;
-						}
+				if (result === '' || history.state) {
+					return;
+				}
 
-						if (parseInt(result) > 0) {
-							$(".modal-body").html(
-								"게시글 " + parseInt(result) +
-								" 번이 등록되었습니다.");
-						}
+				if (parseInt(result) > 0) {
+					$(".modal-body").html(
+						"게시글 " + parseInt(result) +
+						" 번이 등록되었습니다.");
+				}
 
-						$("#myModal").modal("show");
+				$("#myModal").modal("show");
 
-					}
+			}
 
-					// 게시물 수정 버튼 클릭
-					$("#regBtn").on("click", function () {
-						self.location = "/board/register";
-					});
+			// 게시물 수정 버튼 클릭
+			$("#regBtn").on("click", function () {
+				self.location = "/board/register";
+			});
 
-					// 페이징 링크 처리
-					var actionForm = $('#actionForm');
+			// 페이징 링크 처리
+			var actionForm = $('#actionForm');
 
-					$(".page-item a").on("click", function (e) {
+			$(".page-item a").on("click", function (e) {
 
-						e.preventDefault();
+				e.preventDefault();
 
-						console.log('click');
+				console.log('click');
 
-						actionForm.find("input[name='pageNum']").val($(this).attr("href"));
-						actionForm.submit();
-					});
+				actionForm.find("input[name='pageNum']").val($(this).attr("href"));
+				actionForm.submit();
+			});
 
-					$('.move').on('click', function (e) {
+			$('.move').on('click', function (e) {
 
-						e.preventDefault();
-						actionForm.append("<input type='hidden' name='bno' value='" + $(this).attr("href") + "'>'");
-						actionForm.attr('action', '/board/get');
-						actionForm.submit();
-					});
+				e.preventDefault();
+				actionForm.append("<input type='hidden' name='bno' value='" + $(this).attr("href") + "'>'");
+				actionForm.attr('action', '/board/get');
+				actionForm.submit();
+			});
 
-					console.log($(this).attr("href"));
+			console.log($(this).attr("href"));
 
-					// 검색 로직
-					var searchForm = $('#searchForm');
+			// 검색 로직
+			var searchForm = $('#searchForm');
 
-					$('#searchForm button').on('click', function (e) {
+			$('#searchForm button').on('click', function (e) {
 
-						if (!searchForm.find("option:selected").val()) {
-							alert("검색종류를 선택하세요.");
-							return false;
-						}
+				if (!searchForm.find("option:selected").val()) {
+					alert("검색종류를 선택하세요.");
+					return false;
+				}
 
-						if (!searchForm.find("input[name='keyword']").val()) {
-							alert("키워드를 입력하세요.");
-							return false;
-						}
+				if (!searchForm.find("input[name='keyword']").val()) {
+					alert("키워드를 입력하세요.");
+					return false;
+				}
 
-						searchForm.find("input[name='pageNum']").val("1");
-						e.preventDefault();
+				searchForm.find("input[name='pageNum']").val("1");
+				e.preventDefault();
 
-						searchForm.submit();
-					});
-				});
+				searchForm.submit();
+			});
+		});
 	</script>
 
 	</html>

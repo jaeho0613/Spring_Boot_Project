@@ -7,6 +7,59 @@
 <!-- Heaer.jsp -->
 <jsp:include page="../includes/header.jsp"></jsp:include>
 
+
+
+<style>
+  .uploadResult {
+    width: 100%;
+    background-color: gray;
+  }
+
+  .uploadResult ul {
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .uploadResult ul li {
+    list-style: none;
+    padding: 10px;
+  }
+
+  .uploadResult ul li img {
+    width: 100px;
+  }
+
+  .uploadResult ul li span {
+    color: wheat;
+  }
+
+  .bigPictureWrapper {
+    position: absolute;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    top: 0%;
+    width: 100%;
+    height: 100%;
+    background-color: gray;
+    z-index: 100;
+    background: rgba(107, 107, 107, 0.5);
+  }
+
+  .bigPicture {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .bigPicture img {
+    width: 600px;
+  }
+</style>
+
 <!-- Content Wrapper -->
 <div id="content-wrapper" class="d-flex flex-column">
 
@@ -185,6 +238,13 @@
     </nav>
     <!-- End of Topbar -->
 
+    <!-- 원본 이미지 영역 -->
+    <div class="bigPictureWrapper">
+      <div class="bigPicture">
+
+      </div>
+    </div>
+
     <!-- Input From -->
     <div class="card-body mr-5 ml-5">
       <h5 class="card-title text-center">Board Read Page</h5>
@@ -215,6 +275,16 @@
 
       <button data-oper='modify' class="btn btn-primary">Modify</button>
       <button data-oper='list' class="btn btn-primary">List</button>
+
+      <!-- 첨부 파일 영역 -->
+      <div class="card bg-light mb-3 mt-5">
+        <div class="card-header">Files</div>
+        <div class="card-body uploadResult">
+          <ul>
+            <!-- 파일이 보여질 영역 -->
+          </ul>
+        </div>
+      </div>
 
       <div class="row mt-5">
         <div class="col-lg-12">
@@ -307,6 +377,10 @@
   </body>
 
   <script src="/resources/js/reply.js"></script>
+
+  <script>
+    $.getJSON
+  </script>
 
   <!-- Reply 이벤트 처리 -->
   <script>
@@ -510,6 +584,117 @@
     });
   </script>
 
+  <!-- form 조작 스크립트 -->
+  <script>
+    $(document).ready(function () {
+
+      var operForm = $("#operForm");
+
+      $("button[data-oper='modify']").on("click", function (e) {
+
+        operForm.attr("action", "/board/modify").submit();
+
+      });
+
+      $("button[data-oper='list']").on("click", function (e) {
+
+        operForm.find('#bno').remove();
+        operForm.attr('action', "/board/list");
+        operForm.submit();
+
+      });
+    });
+  </script>
+
+  <!-- 첨부파일 스크립트 -->
+  <script>
+    $(document).ready(function () {
+
+      function showImage(fileCallPath) {
+
+        alert(fileCallPath);
+
+        $(".bigPictureWrapper").css("display", "flex").show();
+
+        $(".bigPicture")
+          .html("<img src='/display?fileName=" + fileCallPath + "'>")
+          .animate({
+            width: '100%',
+            height: '100%'
+          }, 1000);
+      }
+
+      // 첨부 파일 보여주기
+      (function () {
+        var bno = '${board.bno}';
+
+        $.getJSON("/board/getAttachList", {
+          bno: bno
+        }, function (arr) {
+          console.log(arr);
+
+          var str = "";
+
+          $(arr).each(function (i, attach) {
+            // image Type
+            if (attach.fileType) {
+              var fileCallPath = encodeURIComponent(attach.uploadPath + "/s_" + attach.uuid + "_" + attach
+                .fileName);
+
+              str += "<li data-path='" + attach.uploadPath + "' data-uuid=" + attach.uuid +
+                " data-filename='" + attach.fileName + "' data-type='" + attach.fileType + "' ><div>";
+              str += "<img src='/display?fileName=" + fileCallPath + "'>";
+              str += "</div>";
+              str += "</li>";
+            } else {
+
+              str += "<li data-path='" + attach.uploadPath + "' data-uuid=" + attach.uuid +
+                " data-filename='" + attach.fileName + "' data-type='" + attach.fileType + "' ><div>";
+              str += "<span> " + attach.fileName + "<span><br/>";
+              str += "<img src='/resources/img/attach.png'>";
+              str += "</div>";
+              str += "</li>";
+            }
+          });
+
+          $(".uploadResult ul").html(str);
+
+        }); // end getjson
+      })(); // end function
+
+      // 첨부 파일 클릭 이벤트
+      $(".uploadResult").on('click', 'li', function (e) {
+
+        console.log("view image");
+
+        var liObj = $(this);
+
+        var path = encodeURIComponent(liObj.data("path") + "/" + liObj.data("uuid") + "_" + liObj.data(
+          "filename"));
+        console.log(liObj);
+        console.log("path: " + path);
+
+        if (liObj.data("type")) {
+          showImage(path.replace(new RegExp(/\\/g), "/"));
+        } else {
+          self.location = "/download?fileName=" + path;
+        }
+      });
+
+      $(".bigPictureWrapper").on('click', function (e) {
+        $(".bigPicture").animate({
+          width: '0%',
+          height: '0%'
+        }, 1000);
+        setTimeout(function () {
+          $(".bigPictureWrapper").hide();
+        }, 1000);
+      });
+
+
+    });
+  </script>
+
   <!-- Reply Rest API Test -->
   <!-- <script>
     console.log("================");
@@ -566,42 +751,5 @@
       console.log(data);
     });
   </script> -->
-
-  <!-- form 조작 스크립트 -->
-  <script>
-    $(document).ready(function () {
-
-      var operForm = $("#operForm");
-
-      $("button[data-oper='modify']").on("click", function (e) {
-
-        operForm.attr("action", "/board/modify").submit();
-
-      });
-
-      $("button[data-oper='list']").on("click", function (e) {
-
-        operForm.find('#bno').remove();
-        operForm.attr('action', "/board/list");
-        operForm.submit();
-
-      });
-    });
-  </script>
-
-  <script>
-    $(document).ready(function () {
-
-      (function () {
-        var bno = '${board.bno}';
-
-        $.getJSON("/board/getAttachList", {
-          bno: bno
-        }, function (arr) {
-          console.log(arr);
-        }); // end getjson
-      })(); // end function
-    });
-  </script>
 
   </html>

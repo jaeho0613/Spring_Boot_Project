@@ -1,12 +1,12 @@
 -- desc user_objects;
 select object_name, object_type from user_objects;
 
-drop sequence seq_board;
 drop sequence seq_reply;
+drop sequence seq_board;
 
-drop table tbl_board;
-drop table tbl_reply;
 drop table tbl_attach;
+drop table tbl_reply;
+drop table tbl_board;
 
 COMMIT;
 
@@ -32,7 +32,7 @@ create table tbl_reply (
     updateDate date default sysdate
 );
 
-create table tbl_attach (
+create table tbl_attach(
     uuid varchar2(100) not null,
     uploadPath varchar2(200) not null,
     fileName varchar2(100) not null,
@@ -40,12 +40,12 @@ create table tbl_attach (
     bno number(10,0)
 );
 
-alter table tbl_attach add constraint pk_attach primary key (uuid);
-alter table tbl_attach add constraint fk_board_attach foreign key (bno) references tbl_board(bno);
-
 alter table tbl_board add constraint pk_board primary key ( bno );
 alter table tbl_reply add constraint pk_reply primary key (rno);
 alter table tbl_reply add constraint fk_reply_board foreign key (bno) references tbl_board(bno);
+
+alter table tbl_attach add constraint pk_attach primary key (uuid);
+alter table tbl_attach add constraint fk_board_attach foreign key (bno) references tbl_board(bno);
 
 commit;
 
