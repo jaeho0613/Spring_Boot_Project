@@ -103,6 +103,7 @@ public class BoardController {
 
 	@PostMapping("/modify")
 	public String modify(BoardVO board, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr) {
+		
 		log.info("modify :" + board);
 
 		if (service.modify(board)) {

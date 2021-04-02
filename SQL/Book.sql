@@ -1,5 +1,5 @@
 -- desc user_objects;
-select object_name, object_type from user_objects;
+--select object_name, object_type from user_objects;
 
 drop sequence seq_reply;
 drop sequence seq_board;
