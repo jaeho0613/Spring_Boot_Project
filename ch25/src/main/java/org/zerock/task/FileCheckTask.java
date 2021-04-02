@@ -1,5 +1,6 @@
 package org.zerock.task;
 
+import java.io.Console;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -35,6 +36,8 @@ public class FileCheckTask {
 		cal.add(Calendar.DATE, -1);
 
 		String str = sdf.format(cal.getTime());
+		
+		System.out.println("Time : " + str);
 
 		return str.replace("-", File.separator);
 	}
@@ -63,6 +66,7 @@ public class FileCheckTask {
 
 		// files in yesterday directory
 		File targetDir = Paths.get("C:\\upload", getFolderYesterDay()).toFile();
+		log.warn(targetDir);
 
 		File[] removeFiles = targetDir.listFiles(file -> fileListPaths.contains(file.toPath()) == false);
 
